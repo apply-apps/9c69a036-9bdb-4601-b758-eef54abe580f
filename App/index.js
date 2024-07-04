@@ -25,7 +25,20 @@ function HomeScreen({ navigation }) {
     );
 }
 
-const HomeScreenStyles = StyleSheet.create({
+function StoryScreen({ route, navigation }) {
+    const { title, content } = route.params;
+
+    return (
+        <SafeAreaView style={styles.container}>
+            <ScrollView contentContainerStyle={styles.scrollContainer}>
+                <Text style={styles.title}>{title}</Text>
+                <Text style={styles.content}>{content}</Text>
+            </ScrollView>
+        </SafeAreaView>
+    );
+}
+
+const styles = StyleSheet.create({
     container: {
         flex: 1,
         marginTop: 50,
@@ -40,34 +53,8 @@ const HomeScreenStyles = StyleSheet.create({
     buttonContainer: {
         marginVertical: 10,
     },
-});
-
-function StoryScreen({ route, navigation }) {
-    const { title, content } = route.params;
-
-    return (
-        <SafeAreaView style={StoryScreenStyles.container}>
-            <ScrollView contentContainerStyle={StoryScreenStyles.scrollContainer}>
-                <Text style={StoryScreenStyles.title}>{title}</Text>
-                <Text style={StoryScreenStyles.content}>{content}</Text>
-            </ScrollView>
-        </SafeAreaView>
-    );
-}
-
-const StoryScreenStyles = StyleSheet.create({
-    container: {
-        flex: 1,
-        padding: 20,
-        backgroundColor: '#fff',
-    },
     scrollContainer: {
         paddingBottom: 20,
-    },
-    title: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        marginBottom: 20,
     },
     content: {
         fontSize: 18,
