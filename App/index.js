@@ -1,53 +1,87 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+// Filename: index.js
+// Combined code from all files
 
-const App = () => {
-  const fullText = 'Hi, this is Apply.\nCreating mobile apps is now as simple as typing text.\nJust input your idea and press APPLY, and our platform does the rest...';
-  const [displayedText, setDisplayedText] = useState('');
-  const [index, setIndex] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { SafeAreaView, StyleSheet, Text, Button, View, ScrollView } from 'react-native';
 
-  useEffect(() => {
-    if (isPaused) return;
+const Stack = createStackNavigator();
 
-    const interval = setInterval(() => {
-      setDisplayedText((prev) => prev + fullText[index]);
-      setIndex((prev) => {
-        if (prev === fullText.length - 1) {
-          setIsPaused(true);
-          setTimeout(() => {
-            setDisplayedText('');
-            setIndex(0);
-            setIsPaused(false);
-          }, 2000);
-          return 0;
-        }
-        return prev + 1;
-      });
-    }, 100);
+function HomeScreen({ navigation }) {
+    const openStory = (title, content) => {
+        navigation.navigate('Story', { title, content });
+    };
 
-    return () => clearInterval(interval);
-  }, [index, isPaused]);
+    return (
+        <SafeAreaView style={styles.container}>
+            <Text style={styles.title}>Fairy Tales</Text>
+            <View style={styles.buttonContainer}>
+                <Button title="Cinderella" onPress={() => openStory('Cinderella', 'Once upon a time, there was a kind girl named Cinderella...')} />
+                <Button title="Snow White" onPress={() => openStory('Snow White', 'Once upon a time, in a faraway land, there was a princess named Snow White...')} />
+                <Button title="Rapunzel" onPress={() => openStory('Rapunzel', 'There was a gorgeous girl with long, flowing hair named Rapunzel...')} />
+            </View>
+        </SafeAreaView>
+    );
+}
 
-  return (
-    <View style={styles.container}>
-      <Text style={styles.text}>{displayedText}</Text>
-    </View>
-  );
-};
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    backgroundColor: 'black',
-    padding: 20,
-  },
-  text: {
-    color: 'white',
-    fontSize: 24,
-    fontFamily: 'monospace',
-  },
+const HomeScreenStyles = StyleSheet.create({
+    container: {
+        flex: 1,
+        marginTop: 50,
+        padding: 20,
+        backgroundColor: '#fff',
+    },
+    title: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        marginBottom: 20,
+    },
+    buttonContainer: {
+        marginVertical: 10,
+    },
 });
 
-export default App;
+function StoryScreen({ route, navigation }) {
+    const { title, content } = route.params;
+
+    return (
+        <SafeAreaView style={StoryScreenStyles.container}>
+            <ScrollView contentContainerStyle={StoryScreenStyles.scrollContainer}>
+                <Text style={StoryScreenStyles.title}>{title}</Text>
+                <Text style={StoryScreenStyles.content}>{content}</Text>
+            </ScrollView>
+        </SafeAreaView>
+    );
+}
+
+const StoryScreenStyles = StyleSheet.create({
+    container: {
+        flex: 1,
+        padding: 20,
+        backgroundColor: '#fff',
+    },
+    scrollContainer: {
+        paddingBottom: 20,
+    },
+    title: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        marginBottom: 20,
+    },
+    content: {
+        fontSize: 18,
+        lineHeight: 28,
+    },
+});
+
+export default function App() {
+    return (
+        <NavigationContainer>
+            <Stack.Navigator initialRouteName="Home">
+                <Stack.Screen name="Home" component={HomeScreen} />
+                <Stack.Screen name="Story" component={StoryScreen} />
+            </Stack.Navigator>
+        </NavigationContainer>
+    );
+}
